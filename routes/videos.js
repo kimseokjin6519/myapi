@@ -12,6 +12,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+/*
 // Get a specific video by ID
 router.get('/:id', async (req, res) => {
   try {
@@ -22,6 +23,7 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 // Create a new video
 router.post('/', async (req, res) => {
@@ -70,5 +72,6 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+*/
 
 module.exports = router;
