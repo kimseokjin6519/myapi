@@ -12,13 +12,15 @@ router.get('/', async (req, res) => {
   }
 });
 
-//  Search by keywords
-
+// Search by keywords
 router.get('/search', async (req, res) => {
   try {
-    const keywords = req.query.keywords ? req.query.keywords.split(',') : [];
+    const keywords = req.query.keywords ? req.query.keywords.split(',').map(k => k.trim()).filter(Boolean) : [];
+
     if (keywords.length === 0) {
-      return res.status(400).json({ message: 'Keywords query parameter is required' });
+      // Return all videos if no keywords are provided
+      const videos = await Video.find();
+      return res.json(videos);
     }
 
     // Create a regular expression that matches whole words only
@@ -34,7 +36,6 @@ router.get('/search', async (req, res) => {
   }
 });
 
-
 /*
 // Get a specific video by ID
 router.get('/:id', async (req, res) => {
@@ -46,7 +47,6 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
 
 // Create a new video
 router.post('/', async (req, res) => {
