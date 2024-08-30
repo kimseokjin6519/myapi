@@ -12,6 +12,29 @@ router.get('/', async (req, res) => {
   }
 });
 
+//  Search by keywords
+
+router.get('/search', async (req, res) => {
+  try {
+    const keywords = req.query.keywords ? req.query.keywords.split(',') : [];
+    if (keywords.length === 0) {
+      return res.status(400).json({ message: 'Keywords query parameter is required' });
+    }
+
+    // Create a regular expression that matches whole words only
+    const searchQueries = keywords.map(keyword => ({
+      title: new RegExp(`\\b${keyword}\\b`, 'i')  // Match whole word boundaries
+    }));
+
+    const videos = await Video.find({ $or: searchQueries });
+
+    res.json(videos);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
 /*
 // Get a specific video by ID
 router.get('/:id', async (req, res) => {
