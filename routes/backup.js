@@ -1,11 +1,12 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const User = require('../models/user'); // Adjust the path as needed
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+// Sign-in Route
+router.post('/signin', async (req, res) => {
   const { email, password } = req.body;
 
   try {
