@@ -18,8 +18,10 @@ const authenticateToken = (req, res, next) => {
 
 // Endpoint to check authentication status
 router.get('/', authenticateToken, (req, res) => {
+
   // If the token is valid and the middleware passes, user is authenticated
-  res.json({ authenticated: true });
+   res.json({
+      authenticated: true});
 });
 
 module.exports = router;
