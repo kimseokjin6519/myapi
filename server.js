@@ -5,6 +5,7 @@ const cors = require('cors');
 const videosRoute = require('./routes/videos');
 const signinRoute = require('./routes/signin');
 const authRoute = require('./routes/auth-status');
+const profileRoute = require('./routes/profile');
 
 dotenv.config();
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use('/api/videos', videosRoute);
 app.use('/api/signin', signinRoute);
 app.use('/api/auth-status', authRoute);
+app.use('/api/profile', profileRoute);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
