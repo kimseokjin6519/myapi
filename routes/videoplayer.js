@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const Video = require('../models/videos'); // Ensure correct path
+const Video = require('../models/videos');
 
-// GET request using query parameters
 router.get('/', async (req, res) => {
   const { videoID } = req.query;
-
   try {
     const video = await Video.findOne({ videoID: videoID });
     if (video) {
