@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
          return `https://www.youtube.com/watch?v=${video.videoID}`;
       });
 
-      const url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=US&key=AIzaSyC0m-M0VsJPThT8MduBS-uFzDXeduPyBfk&maxResults=25';
+      const url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=US&key=AIzaSyC0m-M0VsJPThT8MduBS-uFzDXeduPyBfk&maxResults=50';
       const response = await fetch(url);
       const youtubeMostPopular = await response.json();
       const youtubeMostPopularList = youtubeMostPopular.items.map(item => ({
