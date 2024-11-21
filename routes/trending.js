@@ -19,13 +19,14 @@ router.get('/', async (req, res) => {
          description: item.snippet.description
       }));
 
-      const message =   `Take no more than 5 seconds to return a result or return Busy. Please try again in a few moments. Analyze the first list of 
-                         YouTube videos (use title and description) to discover why they are popular, then return only a string of popular keywords
-                         separated by comma from analysis.
+      message =   `Analyze the following list of 
+                         50 YouTube videos (use title and description), then assign at least 2 relevant keywords for each video and then
+                         return only the string of the 50 keyword pairs
+                         separated by comma.
                          `;
 
       const geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCU2ZuEIJRNuwYB719XCC8Pbvwlzvzsjbc';
-      const geminiResponse = await fetch(geminiUrl, {
+      geminiResponse = await fetch(geminiUrl, {
          method: 'POST',
          headers: {
             'Content-Type': 'application/json',
@@ -35,7 +36,7 @@ router.get('/', async (req, res) => {
                {
                   parts: [
                      {
-                        text: message + JSON.stringify(youtubeMostPopularList) + JSON.stringify(myVideosList)// Sending extracted YouTube data as JSON
+                        text: message + JSON.stringify(youtubeMostPopularList)
                      }
                   ]
                }
@@ -43,9 +44,36 @@ router.get('/', async (req, res) => {
          })
       });
 
-      const geminiData = await geminiResponse.json();
+      geminiData = await geminiResponse.json();
+      keywordsList = geminiData.candidates[0].content.parts[0].text;
 
-      res.send(geminiData);
+//    res.send(keywordsList);
+
+      message =   `Using the first list of keywords, rank the second list using the keywords as guide, and return only the ranked
+                   list of URLS separated by commas.`;
+
+      geminiResponse = await fetch(geminiUrl, {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+            contents: [
+               {
+                  parts: [
+                     {
+                        text: message + JSON.stringify(keywordsList) + JSON.stringify(myVideosList)// Sending extracted YouTube data as JSON
+                     }
+                  ]
+               }
+            ]
+         })
+      });
+
+      geminiData = await geminiResponse.json();
+      const sortedList = geminiData.candidates[0].content.parts[0].text;
+
+      res.send(sortedList);
 
    } catch (error) {
       console.error('Error fetching data:', error);
