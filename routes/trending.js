@@ -6,11 +6,15 @@ router.get('/', async (req, res) => {
 
    try {
 
+      // My Videos List
+
       const myVideos = await Video.find({});
       const myVideosList = myVideos.map(video => {
          return `https://www.youtube.com/watch?v=${video.videoID}`;
       });
 
+      // Youtube Videos List
+      
       const url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=US&key=AIzaSyC0m-M0VsJPThT8MduBS-uFzDXeduPyBfk&maxResults=50';
       const response = await fetch(url);
       const youtubeMostPopular = await response.json();
@@ -19,12 +23,11 @@ router.get('/', async (req, res) => {
          description: item.snippet.description
       }));
 
-      message =   `Analyze the following list of 
-                         50 YouTube videos (use title and description), then assign at least 2 relevant keywords for each video and then
-                         return only the string of the 50 keyword pairs
-                         separated by comma.
-                         `;
-
+      // AI Section (Testing)
+      
+      message =   `Analyze the following list of 50 YouTube videos (use title and description), then assign at least 2 relevant keywords
+                   for each video and then return only the string of the 50 keyword pairs separated by comma.`;
+      
       const geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCU2ZuEIJRNuwYB719XCC8Pbvwlzvzsjbc';
       geminiResponse = await fetch(geminiUrl, {
          method: 'POST',
@@ -47,10 +50,8 @@ router.get('/', async (req, res) => {
       geminiData = await geminiResponse.json();
       keywordsList = geminiData.candidates[0].content.parts[0].text;
 
-//    res.send(keywordsList);
-
-      message =   `Using the first list of keywords, rank the second list using the keywords as guide, and return only the ranked
-                   list of URLS separated by commas.`;
+      message =   `Using the first list of keywords, rank the second list using the keywords as a guide, and return ONLY a ranked
+                   list of URLS separated by commas. You may only change the order of the second list for ranking purposes.`;
 
       geminiResponse = await fetch(geminiUrl, {
          method: 'POST',
@@ -62,7 +63,7 @@ router.get('/', async (req, res) => {
                {
                   parts: [
                      {
-                        text: message + JSON.stringify(keywordsList) + JSON.stringify(myVideosList)// Sending extracted YouTube data as JSON
+                        text: message + JSON.stringify(keywordsList) + JSON.stringify(myVideosList)
                      }
                   ]
                }
