@@ -8,7 +8,6 @@ const signinRoute = require('./routes/signin');
 const authRoute = require('./routes/auth-status');
 const profileRoute = require('./routes/profile');
 const videoPlayerRoute = require('./routes/videoplayer');
-const trendingRoute = require('./routes/trending');
 
 dotenv.config();
 const app = express();
@@ -20,7 +19,6 @@ app.use('/api/signin', signinRoute);
 app.use('/api/auth-status', authRoute);
 app.use('/api/profile', profileRoute);
 app.use('/api/videoplayer', videoPlayerRoute);
-app.use('/api/trending', trendingRoute);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
